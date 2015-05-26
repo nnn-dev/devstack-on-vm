@@ -8,7 +8,7 @@ require 'yaml'
 
 # Defaults values
 vars=YAML.load_file('./files/default_vars.yml')
-vars.merge!(YAML.load_file('external_vars.yml'))
+vars.merge!(YAML.load_file('external_vars.yml')) if File.file?('external_vars.yml')
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
  
@@ -40,8 +40,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
        
     if vars['trove']
-     config.vm.provision :shell, path: "files/bootstrap.sh", args: "/vagrant/files vagrant"
-    else
      config.vm.provision :shell, path: "files/bootstrap.sh", args: "/vagrant/files vagrant #{vars['trove_db_name']}"
+    else
+     config.vm.provision :shell, path: "files/bootstrap.sh", args: "/vagrant/files vagrant"
     end
 end
