@@ -1,0 +1,124 @@
+[[post-config|$NOVA_CONF]]
+[DEFAULT]
+vnc_keymap={{ vnc_keymap }}
+# allow use of all hosts
+scheduler_default_filters = AllHostsFilter
+{% if ceilometer %}
+instance_usage_audit=true 
+
+[[post-config|$CINDER_CONF]]
+[DEFAULT]
+notification_driver=messagingv2
+{% endif %}
+
+[[local|localrc]]
+# Default passwords
+ADMIN_PASSWORD=openstack
+MYSQL_PASSWORD=openstack
+RABBIT_PASSWORD=openstack
+SERVICE_PASSWORD=openstack
+DATABASE_PASSWORD=openstack
+SERVICE_TOKEN=tokentoken
+SWIFT_HASH=tokentoken
+
+
+SCREEN_LOGDIR=/opt/stack/logs
+
+GIT_BASE={{ git_base }}
+
+HOST_IP={{ public_ip }}
+
+{% if vm_archbits == 32 %}
+CIRROS_ARCH=i386
+{% else %}
+CIRROS_ARCH=x86_64
+{% endif %}
+
+USE_VENV=False
+
+{% if neutron %}
+#
+# Enable Neutron
+#
+# https://wiki.openstack.org/wiki/NeutronDevstack
+disable_service n-net
+enable_service q-svc
+enable_service q-agt
+enable_service q-dhcp
+enable_service q-l3
+enable_service q-meta
+enable_service neutron
+{% endif %}
+
+{% if swift %}
+# Enable Swift
+enable_service s-proxy
+enable_service s-object
+enable_service s-container
+enable_service s-account
+{% endif %}
+
+
+{% if not security_groups %}
+# Disable security groups entirely
+Q_USE_SECGROUP=False
+LIBVIRT_FIREWALL_DRIVER=nova.virt.firewall.NoopFirewallDriver
+{% endif %}
+
+{% if not tempest %}
+disable_service tempest
+{% endif %}
+
+{% if trove %}
+enable_service trove
+enable_service tr-api
+enable_service tr-tmgr
+enable_service tr-cond
+{% endif %}
+
+{% if ceilometer %}
+enable_service ceilometer-acompute ceilometer-acentral ceilometer-anotification ceilometer-collector
+enable_service ceilometer-alarm-evaluator,ceilometer-alarm-notifier
+enable_service ceilometer-api
+{% endif %}
+
+{% if ceph %}
+CEPH_LOOPBACK_DISK_SIZE=10G
+CEPH_CONF=/etc/ceph/ceph.conf
+CEPH_REPLICAS=1
+GLANCE_CEPH_USER=glancy
+GLANCE_CEPH_POOL=imajeez
+CINDER_DRIVER=ceph
+CINDER_CEPH_USER=cindy
+CINDER_CEPH_POOL=volumeuh
+CINDER_CEPH_UUID=6d52eb95-12f3-47e3-9eb9-0c1fe4142426
+CINDER_BAK_CEPH_POOL=backeups
+CINDER_BAK_CEPH_USER=cind-backeups
+CINDER_ENABLED_BACKENDS=ceph,lvm
+NOVA_CEPH_POOL=vmz
+enable_service ceph
+{% endif %}
+
+{% if neutron_lbaas %}
+enable_service q-lbaas
+{% endif %}
+
+{% if neutron_vpn %}
+enable_service q-vpn
+{% endif %}
+
+{% if neutron_fwaas %}
+enable_service q-fwaas
+{% endif %}
+
+{% if designate %}
+enable_service designate
+enable_service designate-api
+enable_service designate-central
+{% if designate_sink %}
+enable_service designate-sink
+{% endif %}
+{% if designate_agent %}
+enable_service designate-agent
+{% endif %}
+{% endif %}

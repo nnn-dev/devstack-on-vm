@@ -1,0 +1,52 @@
+---
+
+- hosts: 127.0.0.1
+  vars_files:
+   - ./default_vars.yml
+   - ../external_vars.yml
+  roles:
+    - { role: kamaln7.swapfile, swapfile_size: "{{ vm_swapsize }}" }
+  tasks:
+    - name: install git
+      apt: "name=git update_cache=yes"
+      sudo: True
+                  
+    - name: git config https instead git
+      command: git config --global url."https://".insteadOf git://
+      sudo: True
+
+    - name: checkout devstack
+      git: "repo={{ git_base }}/openstack-dev/devstack.git dest=/opt/stack/devstack version={{ branch_version }}"
+
+    - name: checkout trove-integration
+      git: "repo={{ git_base }}/openstack/trove-integration.git dest=/opt/stack/trove-integration version=master"
+      when: trove
+      
+    - name: checkout designate
+      git: "repo={{ git_base }}/openstack/designate.git dest=/opt/stack/designate version={{ branch_version }}"
+      when: designate
+
+    - name: install designate extension
+      command: bash -c 'cd /opt/stack/devstack; /opt/stack/designate/contrib/devstack/install.sh'
+      when: designate
+
+    - name: remove localrc
+      file: path=/opt/stack/devstack/localrc state=absent
+      
+    - name: local.conf
+      template: src=local.conf.j2 dest=/opt/stack/devstack/local.conf
+      
+    - name: rsync trove-integration
+      synchronize: src=/opt/stack/trove-integration dest=/opt/stack/tiwork
+      when: trove
+      
+    - name: i386 building
+      replace: dest=/opt/stack/tiwork/trove-integration/scripts/functions_qemu regexp=amd64 replace=i386
+      when: trove and vm_archbits == 32
+    
+    - name: replace password
+      replace: dest=/opt/stack/tiwork/trove-integration/scripts/redstack.rc regexp='_PASSWORD=.*$' replace='_PASSWORD=openstack'
+      when: trove
+    
+
+    
