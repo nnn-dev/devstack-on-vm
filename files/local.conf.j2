@@ -1,6 +1,8 @@
 [[post-config|$NOVA_CONF]]
 [DEFAULT]
 vnc_keymap={{ vnc_keymap }}
+novncproxy_base_url=http://127.0.0.1:{{ vnc_port }}/vnc_auto.html
+novncproxy_port={{ vnc_port }}
 # allow use of all hosts
 scheduler_default_filters = AllHostsFilter
 {% if ceilometer %}

@@ -22,3 +22,4 @@ neutron_fwaas: False
 ceph: False
 trove_db_name: mysql
 vnc_keymap: us
+vnc_port: 6080

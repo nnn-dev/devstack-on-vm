@@ -43,11 +43,23 @@
       
     - name: local.conf
       template: src=local.conf.j2 dest=/opt/stack/devstack/local.conf
-        
+ 
+    - name: launchredstack
+      template: src=launchredstack.sh.j2 dest=/opt/stack/launchredstack.sh
+      when: trove
+  
     - name: rsync trove-integration
       synchronize: src=/opt/stack/trove-integration dest=/opt/stack/tiwork
       when: trove
-   
+    
+    - name: ubuntu user
+      user: name=ubuntu state=present
+      when: trove
+      
+    - name: add public key
+      authorized_key: user=ubuntu key="{{ lookup('file','/opt/stack/tiwork/trove-integration/scripts/files/keys/id_rsa.pub') }}" state=present
+      when: trove
+      
     - name: i386 building
       replace: dest=/opt/stack/tiwork/trove-integration/scripts/functions_qemu regexp=amd64 replace=i386
       when: trove and vm_archbits == 32
@@ -71,8 +83,8 @@
     - name: replace keys.gnupg.net
       replace: dest=/opt/stack/tiwork/trove-integration/scripts/files/elements/ubuntu-percona/pre-install.d/10-percona-apt-key regexp='hkp://keys.gnupg.net' replace='pool.sks-keyservers.net' 
       replace: dest=/opt/stack/tiwork/trove-integration/scripts/files/elements/ubuntu-mysql/pre-install.d/10-percona-apt-key  regexp='hkp://keys.gnupg.net' replace='pool.sks-keyservers.net'
-      replace: dest=/opt/stack/trove-integration/scripts/files/elements/ubuntu-percona/pre-install.d/10-percona-apt-key  regexp='hkp://keys.gnupg.net' replace='pool.sks-keyservers.net'
-      replace: dest=/opt/stack/trove-integration/scripts/files/elements/ubuntu-mysql/pre-install.d/10-percona-apt-key  regexp='hkp://keys.gnupg.net' replace='pool.sks-keyservers.net'
+      replace: dest=/opt/stack/tiwork/trove-integration/scripts/files/elements/ubuntu-percona/pre-install.d/10-percona-apt-key  regexp='hkp://keys.gnupg.net' replace='pool.sks-keyservers.net'
+      replace: dest=/opt/stack/tiwork/trove-integration/scripts/files/elements/ubuntu-mysql/pre-install.d/10-percona-apt-key  regexp='hkp://keys.gnupg.net' replace='pool.sks-keyservers.net'
       when: trove      
     
     - name: install python-pip

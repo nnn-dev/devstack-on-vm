@@ -32,7 +32,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     
     config.vm.network "private_network", ip: "#{vars['vm_private_ip']}"
     config.vm.network "forwarded_port", guest: 80, host: 8080
-    config.vm.network "forwarded_port", guest: 6080, host: 6080
+    config.vm.network "forwarded_port", guest: vars['vnc_port'], host: vars['vnc_port']
     
     config.vm.provider :virtualbox do |vb|
         vb.memory = vars['vm_memory']

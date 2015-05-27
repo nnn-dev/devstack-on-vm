@@ -1,0 +1,10 @@
+#!/bin/bash
+cd /opt/stack/tiwork/trove-integration/scripts; 
+export PATH_DEVSTACK_SRC=/opt/stack/devstack
+{% if neutron %}
+export ENABLE_NEUTRON=true
+{% else %}
+export ENABLE_NEUTRON=false
+{% endif %}
+export NETWORK_GATEWAY={{ vm_private_ip }}
+./redstack kick-start $1
