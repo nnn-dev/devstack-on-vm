@@ -68,6 +68,13 @@
       replace: dest=/opt/stack/tiwork/trove-integration/scripts/redstack.rc regexp='SWIFT_HASH=.*$' replace='SWIFT_HASH=tokentoken'
       when: trove      
     
+    - name: replace keys.gnupg.net
+      replace: dest=/opt/stack/tiwork/trove-integration/scripts/files/elements/ubuntu-percona/pre-install.d/10-percona-apt-key regexp='hkp://keys.gnupg.net' replace='pool.sks-keyservers.net' 
+      replace: dest=/opt/stack/tiwork/trove-integration/scripts/files/elements/ubuntu-mysql/pre-install.d/10-percona-apt-key  regexp='hkp://keys.gnupg.net' replace='pool.sks-keyservers.net'
+      replace: dest=/opt/stack/trove-integration/scripts/files/elements/ubuntu-percona/pre-install.d/10-percona-apt-key  regexp='hkp://keys.gnupg.net' replace='pool.sks-keyservers.net'
+      replace: dest=/opt/stack/trove-integration/scripts/files/elements/ubuntu-mysql/pre-install.d/10-percona-apt-key  regexp='hkp://keys.gnupg.net' replace='pool.sks-keyservers.net'
+      when: trove      
+    
     - name: install python-pip
       apt: "name=python-pip update_cache=yes"
       sudo: True

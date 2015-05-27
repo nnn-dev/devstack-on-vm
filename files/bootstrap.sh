@@ -33,8 +33,8 @@ su - $USERN -c /bin/bash <<EOF
 cd /opt/stack/devstack
 ./stack.sh
 if [ -n "$3" ]; then
- cd /opt/stack/tiwork/trove-integration/scripts; HOSTALIASES=/etc/host.aliases ./redstack kick-start $3
+ cd /opt/stack/tiwork/trove-integration/scripts; ./redstack kick-start $3
 fi
-source /opt/stack/devstack/openrc admin
-nova flavor-create m1.rd-smaller 8 768 3 1 --ephemeral 0 --swap 0 --is-public true
+#source /opt/stack/devstack/openrc admin
+#nova flavor-create m1.rd-smaller 8 768 3 1 --ephemeral 0 --swap 0 --is-public true
 EOF
