@@ -12,12 +12,12 @@ else
  USERN=$(id -un)
 fi
 
-set -x
+set -e
 DEBIAN_FRONTEND=noninteractive apt-get -qqy install software-properties-common
 DEBIAN_FRONTEND=noninteractive apt-add-repository ppa:ansible/ansible
 DEBIAN_FRONTEND=noninteractive apt-get -qqy update
 DEBIAN_FRONTEND=noninteractive apt-get -qqy install ansible
-ansible-galaxy install kamaln7.swapfile
+ansible-galaxy --force install kamaln7.swapfile
 if [ -d /opt/stack/devstack ]; then
 su - $USERN -c /bin/bash <<EOF
 if [ ! ~/.ssh/id_rsa.pub ]; then
@@ -31,10 +31,14 @@ ansible-playbook -v ${DIRNAME}/install.yaml
 chown -R $USERN /opt/stack/.
 su - $USERN -c /bin/bash <<EOF
 cd /opt/stack/devstack
+[ -f /opt/stack/logs/error.log ] && rm /opt/stack/logs/error.log || :
 ./stack.sh
+[ -f /opt/stack/logs/error.log ] && exit 133 || :
 if [ -n "$3" ]; then
- cd /opt/stack/tiwork/trove-integration/scripts; ./redstack kick-start $3
+ bash /opt/stack/launchredstack.sh $3
 fi
-#source /opt/stack/devstack/openrc admin
-#nova flavor-create m1.rd-smaller 8 768 3 1 --ephemeral 0 --swap 0 --is-public true
+source /opt/stack/devstack/openrc admin
+nova keypair-add test > /home/vagrant/test.pem
+chmod 600 /home/vagrant/test.pem
 EOF
+echo Done

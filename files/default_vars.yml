@@ -6,7 +6,7 @@ vm_private_ip: 171.15.19.31
 vm_swapsize: 4096M
 git_base: https://github.com
 branch_version: stable/kilo
-public_ip: 127.0.0.1
+public_ip: 171.15.19.31
 neutron: true
 swift: False
 security_groups: False
