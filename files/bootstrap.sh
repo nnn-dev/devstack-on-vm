@@ -25,6 +25,7 @@ if [ ! ~/.ssh/id_rsa.pub ]; then
 fi
 cd /opt/stack/devstack
 (screen -ls | grep stack) && ./unstack.sh || :
+killall -q glance-registry || :
 EOF
 fi
 ansible-playbook -v ${DIRNAME}/install.yaml
@@ -41,4 +42,13 @@ source /opt/stack/devstack/openrc admin
 nova keypair-add test > /home/vagrant/test.pem
 chmod 600 /home/vagrant/test.pem
 EOF
-echo Done
+cat <<EOF
+
+ #####    ####   #    #  ######
+ #    #  #    #  ##   #  #
+ #    #  #    #  # #  #  #####
+ #    #  #    #  #  # #  #
+ #    #  #    #  #   ##  #
+ #####    ####   #    #  ######
+
+EOF

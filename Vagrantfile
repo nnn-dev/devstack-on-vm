@@ -10,6 +10,10 @@ require 'yaml'
 vars=YAML.load_file('./files/default_vars.yml')
 vars.merge!(YAML.load_file('external_vars.yml')) if File.file?('external_vars.yml')
 
+if vars['trove'] and (not vars['heat'] or not vars['swift']) then
+ fail 'trove must be enabled with heat and swift'
+end
+
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
  
     if Vagrant.has_plugin?("vagrant-proxyconf")
