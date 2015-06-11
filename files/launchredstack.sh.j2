@@ -7,4 +7,5 @@ export ENABLE_NEUTRON=true
 export ENABLE_NEUTRON=false
 {% endif %}
 export NETWORK_GATEWAY={{ vm_private_ip }}
+export REBUILD_IMAGE=true
 ./redstack kick-start $1
