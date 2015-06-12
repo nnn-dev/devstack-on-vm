@@ -1,25 +1,79 @@
-#Default values
+###                               #
+## Virtual Machine configuration ##
+#                               ###
+
+# RAM size (bits)
 vm_memory: 4096
+# Number of CPU
 vm_cpus: 2
+# Processor architecture (32 or 64)
 vm_archbits: 64
+# VM address on private network
 vm_private_ip: 171.15.19.31
+# Size of swap size
 vm_swapsize: 4096M
+
+###                         #
+## Openstack configuration ##
+#                         ###
+
+# Origin from projects source code
 git_base: https://github.com
+# Version of openstack to install
 branch_version: stable/kilo
+# IP address for public network
 public_ip: 171.15.19.31
-neutron: true
-swift: False
+
+# Disable security groups
 security_groups: False
+
+# Vnc keymap
+vnc_keymap: en-us
+# Vnc port
+vnc_port: 6080
+
+# Backend for internal database
+database_backend: mysql
+
+# Backend for rpc
+rpc_backend: rabbit
+
+# Use neutron for network
+neutron: true
+# Don't use load balancing
+neutron_lbaas: False
+# Don't use VPN
+neutron_vpn: False
+# Don't use firewall as a service
+neutron_fwaas: False
+
+# Don't install tempest
 tempest: False
+
+# Don't install trove
+# For use trove, install also swift and heat
 trove: False
+# Type of database to install
+trove_db_name: mysql
+
+# Don't install swift
+swift: False
+
+# Don't install heat
+heat: False
+
+# Don't use designate
 designate: False
-ceilometer: False
 designate_agent: False
 designate_sink: False
-neutron_lbaas: False
-neutron_vpn: False
-neutron_fwaas: False
+
+# Don't use ceilometer
+ceilometer: False
+
+# Don't use nova_serialproxy
+nova_serialproxy: False
+
+# Don't use ceph
 ceph: False
-trove_db_name: mysql
-vnc_keymap: en-us
-vnc_port: 6080
+
+

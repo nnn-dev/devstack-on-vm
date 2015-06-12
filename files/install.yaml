@@ -3,7 +3,7 @@
 - hosts: 127.0.0.1
   vars_files:
    - ./default_vars.yml
-   - ../external_vars.yml
+   - ../config.yml
   roles:
     - { role: kamaln7.swapfile, swapfile_size: "{{ vm_swapsize }}" }
   tasks:

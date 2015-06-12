@@ -2,7 +2,7 @@
 [[post-config|$NOVA_CONF]]
 [DEFAULT]
 vnc_keymap={{ vnc_keymap }}
-novncproxy_base_url=http://127.0.0.1:{{ vnc_port }}/vnc_auto.html
+#novncproxy_base_url=http://127.0.0.1:{{ vnc_port }}/vnc_auto.html
 # allow use of all hosts
 scheduler_default_filters = AllHostsFilter
 {% if ceilometer %}
@@ -23,9 +23,6 @@ DATABASE_PASSWORD=openstack
 SERVICE_TOKEN=tokentoken
 SWIFT_HASH=tokentoken
 
-
-SCREEN_LOGDIR=/opt/stack/logs
-
 GIT_BASE={{ git_base }}
 
 HOST_IP={{ public_ip }}
@@ -37,6 +34,17 @@ CIRROS_ARCH=x86_64
 {% endif %}
 
 USE_VENV=False
+
+# Enable Logging
+LOGFILE=/opt/stack/logs/stack.sh.log
+VERBOSE=True
+LOG_COLOR=True
+SCREEN_LOGDIR=/opt/stack/logs
+
+{% if not database_backend == 'mysql' %}
+disable_service mysql
+enable_service {{ database_backend }}
+{% endif %}
 
 {% if neutron %}
 #
@@ -123,4 +131,28 @@ enable_service designate-sink
 {% if designate_agent %}
 enable_service designate-agent
 {% endif %}
+{% endif %}
+
+{% if heat %}
+# Heat - Orchestration Service
+enable_service heat
+enable_service h-api
+enable_service h-api-cfn
+enable_service h-api-cw
+enable_service h-eng
+{% endif %}
+
+{% if rpc_backend == "qpid" %}
+disable_service rabbit
+disable_service zeromq
+enable_service qpid
+{% endif %}
+{% if rpc_backend == "zeromq" %}
+disable_service rabbit
+disable_service qpid
+enable_service zeromq
+{% endif %}
+
+{% if nova_serialproxy %}
+enable_service n-sproxy
 {% endif %}

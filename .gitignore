@@ -44,4 +44,4 @@ Temporary Items
 
 # 
 .vagrant
-external_vars.yml
+config.yml
