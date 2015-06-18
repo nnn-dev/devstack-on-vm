@@ -25,7 +25,24 @@ SWIFT_HASH=tokentoken
 
 GIT_BASE={{ git_base }}
 
-HOST_IP={{ public_ip }}
+# Single interface configuration
+# https://github.com/openstack-dev/devstack/blob/master/doc/source/guides/neutron.rst
+HOST_IP={{ vm_host_ip }}
+SERVICE_HOST={{ vm_host_ip }}
+MYSQL_HOST={{ vm_host_ip }}
+RABBIT_HOST={{ vm_host_ip }}
+GLANCE_HOSTPORT={{ vm_host_ip }}
+Q_USE_SECGROUP=True
+FLOATING_RANGE="{{ vm_host_ip | regex_replace('^(.*)\.[0-9]*$', '\\1.1') }}/24"
+FIXED_RANGE="10.0.0.0/24"
+Q_FLOATING_ALLOCATION_POOL=start={{ vm_host_ip | regex_replace('^(.*)\.[0-9]*$', '\\1.250') }},end={{ vm_host_ip | regex_replace('^(.*)\.[0-9]*$', '\\1.254') }}
+PUBLIC_NETWORK_GATEWAY="{{ vm_host_ip | regex_replace('^(.*)\.[0-9]*$', '\\1.1') }}"
+Q_L3_ENABLED=True
+PUBLIC_INTERFACE=eth1
+Q_USE_PROVIDERNET_FOR_PUBLIC=True
+OVS_PHYSICAL_BRIDGE=br-ex
+PUBLIC_BRIDGE=br-ex
+OVS_BRIDGE_MAPPINGS=public:br-ex
 
 {% if vm_archbits == 32 %}
 CIRROS_ARCH=i386
@@ -34,6 +51,8 @@ CIRROS_ARCH=x86_64
 {% endif %}
 
 USE_VENV=False
+API_RATE_LIMIT=False
+APT_FAST=True
 
 # Enable Logging
 LOGFILE=/opt/stack/logs/stack.sh.log

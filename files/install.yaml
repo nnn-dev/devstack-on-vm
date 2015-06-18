@@ -7,6 +7,21 @@
   roles:
     - { role: kamaln7.swapfile, swapfile_size: "{{ vm_swapsize }}" }
   tasks:
+    - name: network config (ip_forward)
+      sysctl: name="net.ipv4.ip_forward" value=1 sysctl_set=yes state=present reload=yes
+    
+    - name: add iptable rule
+      command: /sbin/iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE
+      sudo: true
+  
+    - name: save iptables
+      command: iptables-save
+      sudo: true
+ 
+    - name: restart iptables
+      service: name=ufw state=restarted
+      sudo: true
+  
     - name: install git
       apt: "name=git update_cache=yes"
       sudo: True

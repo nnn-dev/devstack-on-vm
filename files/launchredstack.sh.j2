@@ -6,6 +6,24 @@ export ENABLE_NEUTRON=true
 {% else %}
 export ENABLE_NEUTRON=false
 {% endif %}
-export NETWORK_GATEWAY={{ vm_private_ip }}
+# Single interface configuration
+# https://github.com/openstack-dev/devstack/blob/master/doc/source/guides/neutron.rst
+export HOST_IP={{ vm_host_ip }}
+export SERVICE_HOST={{ vm_host_ip }}
+export MYSQL_HOST={{ vm_host_ip }}
+export RABBIT_HOST={{ vm_host_ip }}
+export GLANCE_HOSTPORT={{ vm_host_ip }}
+export Q_USE_SECGROUP=True
+export FLOATING_RANGE="{{ vm_host_ip | regex_replace('^(.*)\.[0-9]*$', '\\1.1') }}/24"
+export FIXED_RANGE="10.0.0.0/24"
+export Q_FLOATING_ALLOCATION_POOL=start={{ vm_host_ip | regex_replace('^(.*)\.[0-9]*$', '\\1.250') }},end={{ vm_host_ip | regex_replace('^(.*)\.[0-9]*$', '\\1.254') }}
+export PUBLIC_NETWORK_GATEWAY="{{ vm_host_ip | regex_replace('^(.*)\.[0-9]*$', '\\1.1') }}"
+export Q_L3_ENABLED=True
+export PUBLIC_INTERFACE=eth1
+export Q_USE_PROVIDERNET_FOR_PUBLIC=True
+export OVS_PHYSICAL_BRIDGE=br-ex
+export PUBLIC_BRIDGE=br-ex
+export OVS_BRIDGE_MAPPINGS=public:br-ex
+
 export REBUILD_IMAGE=true
 ./redstack kick-start $1

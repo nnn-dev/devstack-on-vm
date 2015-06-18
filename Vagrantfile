@@ -42,8 +42,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     config.vm.hostname = 'devstack'
     
-    config.vm.network "private_network", ip: "#{vars['vm_private_ip']}"
+    config.vm.network "private_network", ip: "#{vars['vm_host_ip']}"
     config.vm.network "forwarded_port", guest: 80, host: 8080
+	config.vm.network "forwarded_port", guest: 5000, host: 5000
 	config.vm.network "forwarded_port", guest: vars['vnc_port'], host: vars['vnc_port']
     
     config.vm.provider :virtualbox do |vb|

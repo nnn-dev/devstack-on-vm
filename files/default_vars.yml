@@ -8,8 +8,8 @@ vm_memory: 4096
 vm_cpus: 2
 # Processor architecture (32 or 64)
 vm_archbits: 64
-# VM address on private network
-vm_private_ip: 171.15.19.31
+# VM address to 
+vm_host_ip: 172.18.161.6
 # Size of swap size
 vm_swapsize: 4096M
 
@@ -21,8 +21,6 @@ vm_swapsize: 4096M
 git_base: https://github.com
 # Version of openstack to install
 branch_version: stable/kilo
-# IP address for public network
-public_ip: 171.15.19.31
 
 # Disable security groups
 security_groups: False
