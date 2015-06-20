@@ -9,7 +9,7 @@ vm_cpus: 2
 # Processor architecture (32 or 64)
 vm_archbits: 64
 # VM address to 
-vm_host_ip: 172.18.161.6
+vm_host_ip: 192.168.27.100
 # Size of swap size
 vm_swapsize: 4096M
 

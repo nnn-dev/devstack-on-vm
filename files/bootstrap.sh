@@ -42,6 +42,8 @@ source /opt/stack/devstack/openrc admin
 nova keypair-add test > /home/vagrant/test.pem
 chmod 600 /home/vagrant/test.pem
 EOF
+ovs-vsctl add-port br-ex eth2
+virsh net-destroy default
 cat <<EOF
 
  #####    ####   #    #  ######
