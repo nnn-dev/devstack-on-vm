@@ -56,7 +56,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         vb.customize ["modifyvm", :id, "--nicpromisc3", "allow-all"]
     end
        
-    if vars['trove'] and not (vars['trove_db_name']=='mysql' and not vars['vm_archbits']=='32')
+    if vars['trove']
      config.vm.provision :shell, path: "files/bootstrap.sh", args: "/vagrant/files vagrant #{vars['trove_db_name']}"
     else
      config.vm.provision :shell, path: "files/bootstrap.sh", args: "/vagrant/files vagrant"

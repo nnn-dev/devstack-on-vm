@@ -112,4 +112,5 @@
       sudo: True
       when: trove
     
-    
+    - name: patch rc.local for cinder after restart
+      template: src=rc.local.j2 dest=/etc/rc.local

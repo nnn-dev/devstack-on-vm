@@ -10,4 +10,4 @@ export ENABLE_NEUTRON=false
 export HOST_IP={{ vm_host_ip }}
 
 export REBUILD_IMAGE=true
-./redstack kick-start $1
+./redstack kick-start $1 2>&1 | tee -a /opt/stack/logs/redstack.sh.log
