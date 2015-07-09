@@ -9,7 +9,7 @@ vm_cpus: 2
 # Processor architecture (32 or 64)
 vm_archbits: 64
 # VM address to 
-vm_host_ip: 192.168.27.100
+vm_host_ip: 192.168.59.100
 # Size of swap size
 vm_swapsize: 4096M
 
@@ -37,6 +37,7 @@ database_backend: mysql
 rpc_backend: rabbit
 
 # Use neutron for network
+# (don't change)
 neutron: true
 # Don't use load balancing
 neutron_lbaas: False
@@ -44,7 +45,9 @@ neutron_lbaas: False
 neutron_vpn: False
 # Don't use firewall as a service
 neutron_fwaas: False
-
+# Use ml2
+# (don't change)
+ml2: True
 # Don't install tempest
 tempest: False
 

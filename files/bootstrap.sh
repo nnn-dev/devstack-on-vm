@@ -26,11 +26,15 @@ fi
 cd /opt/stack/devstack
 (screen -ls | grep stack) && ./unstack.sh || :
 killall -q glance-registry || :
+for i in 0 1 2 3 4; do
+ sudo losetup /dev/loop\${i} && sudo losetup -d /dev/loop\${i} || :
+done
 EOF
 fi
 ansible-playbook -v ${DIRNAME}/install.yaml
 chown -R $USERN /opt/stack/.
 su - $USERN -c /bin/bash <<EOF
+set -e
 cd /opt/stack/devstack
 [ -f /opt/stack/logs/error.log ] && rm /opt/stack/logs/error.log || :
 ./stack.sh
@@ -42,8 +46,13 @@ source /opt/stack/devstack/openrc admin
 nova keypair-add test > /home/vagrant/test.pem
 chmod 600 /home/vagrant/test.pem
 EOF
-ovs-vsctl add-port br-ex eth2
-virsh net-destroy default
+
+if ovs-vsctl list-ports br-ex 2>&1 | grep -q eth2 ; then
+ :
+else
+ ovs-vsctl add-port br-ex eth2
+ virsh net-destroy default
+fi
 cat <<EOF
 
  #####    ####   #    #  ######

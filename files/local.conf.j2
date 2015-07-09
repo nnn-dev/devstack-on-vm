@@ -26,6 +26,7 @@ SWIFT_HASH=tokentoken
 GIT_BASE={{ git_base }}
 
 HOST_IP={{ vm_host_ip }}
+FIXED_RANGE=10.0.0.2/24
 
 {% if vm_archbits == 32 %}
 CIRROS_ARCH=i386
@@ -60,6 +61,12 @@ enable_service q-dhcp
 enable_service q-l3
 enable_service q-meta
 enable_service neutron
+{% endif %}
+
+{% if ml2 %}
+Q_PLUGIN=ml2
+Q_AGENT=openvswitch
+Q_ML2_TENANT_NETWORK_TYPE=vxlan
 {% endif %}
 
 {% if swift %}
