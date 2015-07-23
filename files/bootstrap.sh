@@ -29,6 +29,9 @@ killall -q glance-registry || :
 for i in 0 1 2 3 4; do
  sudo losetup /dev/loop\${i} && sudo losetup -d /dev/loop\${i} || :
 done
+sudo apt-get -q -y remove --purge mysql-server mysql-client mysql-common
+sudo apt-get -q -y autoremove
+sudo apt-get -q -y autoclean
 EOF
 fi
 ansible-playbook -v ${DIRNAME}/install.yaml
@@ -43,6 +46,12 @@ if [ -n "$3" ]; then
  bash /opt/stack/launchredstack.sh $3
 fi
 source /opt/stack/devstack/openrc admin
+if [ -f /home/vagrant/.ssh/known_hosts ]; then
+ rm /home/vagrant/.ssh/known_hosts
+fi
+# add ping and ssh for accessing vm
+nova secgroup-add-rule default icmp -1 -1 0.0.0.0/0
+nova secgroup-add-rule default tcp 22 22 0.0.0.0/0
 nova keypair-add test > /home/vagrant/test.pem
 chmod 600 /home/vagrant/test.pem
 EOF

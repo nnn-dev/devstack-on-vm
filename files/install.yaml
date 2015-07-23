@@ -10,10 +10,14 @@
     - name: network config (ip_forward)
       sysctl: name="net.ipv4.ip_forward" value=1 sysctl_set=yes state=present reload=yes
     
-    - name: add iptable rule
+    - name: add iptable rule (1)
       command: /sbin/iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE
       sudo: true
-  
+       
+    - name: add iptable rule (2)
+      command: /sbin/iptables -A POSTROUTING -t mangle -p udp --dport 68 -j CHECKSUM --checksum-fill
+      sudo: true
+       
     - name: save iptables
       command: iptables-save
       sudo: true

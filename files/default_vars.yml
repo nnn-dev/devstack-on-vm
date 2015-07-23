@@ -22,8 +22,8 @@ git_base: https://github.com
 # Version of openstack to install
 branch_version: stable/kilo
 
-# Disable security groups
-security_groups: False
+# security groups
+security_groups: true
 
 # Vnc keymap
 vnc_keymap: en-us

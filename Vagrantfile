@@ -45,7 +45,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 	# eth1, this will be the endpoint
     config.vm.network "private_network", ip: "#{vars['vm_host_ip']}"
     # eth2, this will be the OpenStack "public" network, use DevStack default
-    config.vm.network :private_network, ip: "172.24.4.225", :netmask => "255.255.255.224", :auto_config => false
+    config.vm.network :private_network, ip: "172.24.4.225", :netmask => "255.255.255.0", :auto_config => false
     config.vm.network "forwarded_port", guest: 80, host: 8080
 	config.vm.network "forwarded_port", guest: 5000, host: 5000
 	config.vm.network "forwarded_port", guest: vars['vnc_port'], host: vars['vnc_port']

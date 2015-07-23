@@ -1,3 +1,6 @@
 losetup /dev/loop0 /opt/stack/data/stack-volumes-default-backing-file 
 losetup /dev/loop1 /opt/stack/data/stack-volumes-lvmdriver-1-backing-file 
+/sbin/iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE
+#source : https://wiki.ubuntu.com/SecurityTeam/TestingOpenStack#Making_OpenStack_available_to_the_LAN
+/sbin/iptables -A POSTROUTING -t mangle -p udp --dport 68 -j CHECKSUM --checksum-fill
 exit 0
