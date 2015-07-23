@@ -42,9 +42,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     config.vm.hostname = 'devstack'
     
+	# eth1, this will be the endpoint
     config.vm.network "private_network", ip: "#{vars['vm_host_ip']}"
-    # ip and subnet mask should match floating_ip_range var in devstack.yml
-    #config.vm.network :private_network, ip: "172.24.4.225", :netmask => "255.255.255.0", :auto_config => false
+    # eth2, this will be the OpenStack "public" network, use DevStack default
+    config.vm.network :private_network, ip: "172.24.4.225", :netmask => "255.255.255.224", :auto_config => false
     config.vm.network "forwarded_port", guest: 80, host: 8080
 	config.vm.network "forwarded_port", guest: 5000, host: 5000
 	config.vm.network "forwarded_port", guest: vars['vnc_port'], host: vars['vnc_port']
@@ -52,6 +53,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provider :virtualbox do |vb|
         vb.memory = vars['vm_memory']
         vb.cpus = vars['vm_cpus']
+		vb.customize ["modifyvm", :id, "--ioapic", "on"]
         # eth2 must be in promiscuous mode for floating IPs to be accessible
         vb.customize ["modifyvm", :id, "--nicpromisc3", "allow-all"]
     end
