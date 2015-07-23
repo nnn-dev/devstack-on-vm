@@ -25,7 +25,9 @@ SWIFT_HASH=tokentoken
 
 GIT_BASE={{ git_base }}
 
-HOST_IP={{ public_ip }}
+HOST_IP={{ vm_host_ip }}
+#FIXED_RANGE=10.0.0.2/24
+#FLOATING_RANGE=172.24.4.0/24
 
 {% if vm_archbits == 32 %}
 CIRROS_ARCH=i386
@@ -34,12 +36,17 @@ CIRROS_ARCH=x86_64
 {% endif %}
 
 USE_VENV=False
+API_RATE_LIMIT=False
+APT_FAST=True
 
 # Enable Logging
 LOGFILE=/opt/stack/logs/stack.sh.log
 VERBOSE=True
 LOG_COLOR=True
 SCREEN_LOGDIR=/opt/stack/logs
+
+# on kilo the n-cauth service must be enabled
+enable_service n-cauth
 
 {% if not database_backend == 'mysql' %}
 disable_service mysql
@@ -58,6 +65,12 @@ enable_service q-dhcp
 enable_service q-l3
 enable_service q-meta
 enable_service neutron
+{% endif %}
+
+{% if ml2 %}
+Q_PLUGIN=ml2
+Q_AGENT=openvswitch
+Q_ML2_TENANT_NETWORK_TYPE=vxlan
 {% endif %}
 
 {% if swift %}
@@ -84,6 +97,7 @@ enable_service trove
 enable_service tr-api
 enable_service tr-tmgr
 enable_service tr-cond
+PRECACHE_IMAGES=False
 {% endif %}
 
 {% if ceilometer %}

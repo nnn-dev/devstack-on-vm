@@ -6,6 +6,8 @@ export ENABLE_NEUTRON=true
 {% else %}
 export ENABLE_NEUTRON=false
 {% endif %}
-export NETWORK_GATEWAY={{ vm_private_ip }}
+
+export HOST_IP={{ vm_host_ip }}
+
 export REBUILD_IMAGE=true
-./redstack kick-start $1
+./redstack kick-start $1 2>&1 | tee -a /opt/stack/logs/redstack.sh.log
