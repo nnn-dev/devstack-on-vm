@@ -25,7 +25,7 @@ if [ ! ~/.ssh/id_rsa.pub ]; then
 fi
 cd /opt/stack/devstack
 (screen -ls | grep stack) && ./unstack.sh || :
-killall -q glance-registry || :
+sudo killall -q glance-registry || :
 for i in 0 1 2 3 4; do
  sudo losetup /dev/loop\${i} && sudo losetup -d /dev/loop\${i} || :
 done
